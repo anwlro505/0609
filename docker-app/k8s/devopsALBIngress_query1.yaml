@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alb-ingress
+  namespace: "devops-alb"
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-0e0d0ad308d6544c0, subnet-0ffabce13bc376695, subnet-0cd7e1b99f90a176c
+    alb.ingress.kubernetes.io/security-groups: sg-09321ec3dc5878690
+  labels:
+    app: devops-ingress
+spec:
+  rules:
+  - host: www.6cicd.net
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/*"
+        backend:
+          serviceName: devops-svc-alb-blue
+          servicePort: 80
+  - host: test.6cicd.net
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/*"
+        backend:
+          serviceName: devops-svc-alb-green
+          servicePort: 8080
+  - host: api.6cicd.net
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/*"
+        backend:
+          serviceName: devops-svc-alb-api
+          servicePort: 8090
+  - host: sonarqube.6cicd.net
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/*"
+        backend:
+          serviceName: devops-svc-alb-sonarqube
+          servicePort: 9000
